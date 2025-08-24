@@ -1,0 +1,36 @@
+﻿@startuml
+
+title Диаграмма контейнеров для системы банка "Стандарт"
+
+top to bottom direction
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+Person(client, "Клиент", "Клиент банка")
+Person(call_center_operator, "Специалист кол-центра", "Специалист кол-центра банка Стандарт")
+Person_Ext(ext_call_center_operator, "Специалист партнерского кол-центра", "Специалист партнерского кол-центра")
+
+System_Boundary(bank_standard_system, "Системы банка Стандарт") {
+    Container(abs, "АБС", "Delphi", "Десктопный клиент")
+    ContainerDb(abs_db, "БД АБС", "Oracle", "Хранит и обрабатывает данные системы АБС")
+
+    Container(call_center, "Система кол-центра", "React.js/Java Spring Boot", "Собственная система кол-центра банка")
+    ContainerDb(call_center_db, "БД системы колл центра", "PostgreSQL", "Хранит и обрабатывает данные системы кол-центра")
+}
+
+System_Ext(ext_call_center, "Система партнерского кол-центра", "Внешняя система партнерского кол-центра")
+System_Ext(storage, "Файловое облачное хранилище", "Внешнее файловое хранилище")
+
+Rel(client, call_center, "Запрос информации по депозитам")
+Rel(client, ext_call_center, "Запрос информации по депозитам")
+
+Rel(call_center_operator, abs, "Получение данных о ставках")
+Rel_U(ext_call_center_operator, ext_call_center, "Запрос актуальных данных")
+
+Rel_D(call_center, call_center_db, "Доступ к истории запросов")
+Rel_D(abs, abs_db, "Обновление информации по ставкам") 
+
+Rel(abs, storage, "Экспорт ставок банка")
+Rel_R(ext_call_center, storage, "Импорт ставок банка")
+
+@enduml
