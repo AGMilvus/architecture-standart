@@ -1,0 +1,21 @@
+﻿@startuml
+
+title Контекст системы банка «Стандарт»
+
+top to bottom direction
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+Person(client, "Клиент", "Клиент банка")
+Person(call_center_operator, "Специалист кол-центра", "Специалист кол-центра банка Стандарт")
+Person_Ext(ext_call_center_operator, "Специалист партнерского кол-центра", "Специалист партнерского кол-центра")
+
+System(bank_standard_system, "Банк Стандарт", "Система банка Стандарт предоставляет банковские услуги клиентам")
+System_Ext(ext_call_center, "Система партнерского кол-центра", "Внешняя система партнерского кол-центра")
+
+Rel_D(client, bank_standard_system, "Звонит в поддержку")
+Rel_D(client, ext_call_center, "Звонит в поддержку")
+Rel_U(call_center_operator, bank_standard_system, "Обрабатывает обращения в кол-центр")
+Rel_U(ext_call_center_operator, ext_call_center, "Обрабатывает обращения в кол-центр")
+
+@enduml

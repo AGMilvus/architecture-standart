@@ -1,0 +1,47 @@
+﻿@startuml
+
+title Диаграмма контейнеров для системы банка "Стандарт"
+
+top to bottom direction
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+Person(client, "Клиент")
+Person(back_office, "Сотрудник бэк офиса", "Сотрудник бэк офиса")
+Person(call_center_operator, "Оператор кол-центра")
+
+System_Boundary(bank_standard_system, "Системы банка Стандарт") {
+    Container(site, "Сайт", "React.js/PHP", "Сайт банка")
+    
+    Container(internet_bank, "Интернет-банк", "ASP.NET MVC 4.5 .NET Framework 4.5", "Клиент-серверная система интернет банка")
+    ContainerDb(internet_bank_db, "БД интернет банка", "MS SQL", "Хранит данные по работе интернет банка")
+
+    Container(abs, "АБС", "Delphi", "Десктопный клиент")
+    ContainerDb(abs_db, "БД АБС", "Oracle", "Хранит и обрабатывает данные системы АБС")
+
+    Container(call_center, "Система кол-центра", "React.js/Java Spring Boot", "Собственная система кол-центра банка")
+    ContainerDb(call_center_db, "БД системы кол-центра", "PostgreSQL", "Хранит и обрабатывает данные системы кол-центра")
+    
+    Container(sms_gateway, "СМС-шлюз", , "Отправка СМС")
+}
+
+Container_Ext(telecom, "Телеком-оператор", "Внешний оператор по отправке СМС")
+
+Rel_D(client, internet_bank, "Оформление заявки на депозит")
+Rel_R(internet_bank, abs, "Новая заявка")
+Rel_D(client, site, "Оформление заявки на депозит")
+Rel_R(site, call_center, "Новая заявка")
+Rel_L(call_center, abs, "Согласованная заявка")
+
+Rel_D(call_center_operator, call_center, "Первичная обработка заявки / Подготовка спец условий")
+
+Rel_D(internet_bank, internet_bank_db,)
+Rel_D(call_center, call_center_db,)
+Rel_D(abs, abs_db,)
+
+Rel(back_office, abs, "Обработка заявки и одобрение заявки")
+
+Rel(abs, sms_gateway, "Отправка СМС клиенту")
+Rel(sms_gateway, telecom, "Отправка СМС клиенту")
+
+@enduml

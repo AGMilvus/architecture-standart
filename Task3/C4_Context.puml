@@ -1,0 +1,21 @@
+﻿@startuml
+
+title Контекст системы банка «Стандарт»
+
+top to bottom direction
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+Person(client, "Клиент", "Клиент банка")
+Person(back_office, "Сотрудник бэк-офиса", "Сотрудник бэк-офиса")
+
+System(bank_standard_system, "UI банка 'Стандарт'", "Сервисы сайта и интернет-банка")
+
+System_Ext(telecom, "СМС-шлюз", "СМС-шлюз телеком-оператора")
+
+Rel_D(client, bank_standard_system, "Оформление заявки на депозит")
+Rel_L(back_office, bank_standard_system, "Обработка заявки на депозит")
+Rel_L(bank_standard_system, telecom, "Отправка СМС клиенту",)
+Rel_U(telecom, client, "Получение СМС")
+
+@enduml
